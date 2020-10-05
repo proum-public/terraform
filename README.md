@@ -1,6 +1,6 @@
 # Hashicorp Terraform image with AWS iam authenticator built-in
 
-> A simple ```alpine``` based container for building Terraform based infrasstructure
+> A simple ```alpine``` based container for building Terraform based infrastructure
 
 ## Quick reference
 

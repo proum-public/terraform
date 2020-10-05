@@ -34,11 +34,18 @@ WORKDIR /go/src/github.com/hashicorp/terraform
 
 FROM alpine:3.12
 
-MAINTAINER Hauke Mettendorf <hauke.mettendorf@gmail.com>
+LABEL \
+  maintainer="Hauke Mettendorf <hauke@mettendorf.it>" \
+  org.opencontainers.image.title="terraform" \
+  org.opencontainers.image.description="A simple alpine based container for building Terraform based infrastructure" \
+  org.opencontainers.image.authors="Hauke Mettendorf <hauke@mettendorf.it>" \
+  org.opencontainers.image.url="https://gitlab.com/proum-public/docker/terraform" \
+  org.opencontainers.image.vendor="https://mettendorf.it" \
+  org.opencontainers.image.licenses="GNUv2"
 
 ARG AWS_CLI_VERSION=2.0.53
 
-RUN apk --update --no-cache add \
+RUN apk --no-cache add \
     bash \
     ca-certificates \
     openssl \
@@ -51,7 +58,6 @@ RUN apk --update --no-cache add \
     && pip install awscli==${AWS_CLI_VERSION} \
     # CLEAN UP
     && apk del --purge deps \
-    && rm /var/cache/apk/* \
     && rm -rf /tmp/*
 
 # Copy aws iam authenticator
