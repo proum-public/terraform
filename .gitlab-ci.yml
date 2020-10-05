@@ -1,0 +1,24 @@
+---
+include:
+  - project: 'proum-public/ci-templates'
+    file: '/common/lint_markdown.yml'
+  - project: 'proum-public/ci-templates'
+    file: '/common/lint_yaml.yml'
+  - project: 'proum-public/ci-templates'
+    file: '/docker/lint_dockerfile.yml'
+  - project: 'proum-public/ci-templates'
+    file: '/docker/build_release.yml'
+  - project: 'proum-public/ci-templates'
+    file: '/docker/cve_scan.yml'
+  - project: 'proum-public/ci-templates'
+    file: '/docker/readme_upload_cve.yml'
+
+stages:
+  - lint
+  - build
+  - security
+  - release
+  - post-release
+
+variables:
+  DOCKERHUB_REPOSITORY: proum/${CI_PROJECT_NAME}
