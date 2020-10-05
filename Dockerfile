@@ -53,7 +53,7 @@ RUN apk --no-cache add \
     wget \
     openssh \
     libc6-compat \
-    && apk add --update -t deps wget \
+    && apk add --no-cache -t deps wget \
     # INSTALL AWS CLI
     && pip install awscli==${AWS_CLI_VERSION} \
     # CLEAN UP
