@@ -35,7 +35,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          DOCKER_IMAGE=${{ env.dockerhub_repository }}/${{ github.repository }}
+          DOCKER_IMAGE=${{ env.dockerhub_repository }}/${GITHUB_REPOSITORY#*/}
           VERSION=noop
           if [ "${{ github.event_name }}" = "schedule" ]; then
             VERSION=nightly
