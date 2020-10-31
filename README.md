@@ -5,7 +5,7 @@
 ## Quick reference
 
 * Sourcecode:
-  [click here](https://gitlab.com/proum-public/docker/terraform)
+  [click here](https://github.com/proum-public/terraform)
 * Maintainer: [Hauke Mettendorf](https://mettendorf.it/)
 
 ## Getting Started
