@@ -55,6 +55,7 @@ jobs:
             MAJOR=${MINOR%.*}
             TAGS="${TAGS},${DOCKER_IMAGE}:${MINOR},${DOCKER_IMAGE}:${MAJOR},${DOCKER_IMAGE}:latest"
           fi
+          echo ::set-output name=dockerhub_full_repository::${DOCKER_IMAGE}
           echo ::set-output name=version::${VERSION}
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
@@ -104,4 +105,4 @@ jobs:
         with:
           dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          dockerhub_repository: ${{ env.dockerhub_repository }}/${GITHUB_REPOSITORY#*/}
+          dockerhub_repository: ${{ steps.repo.outputs.dockerhub_full_repository }}
