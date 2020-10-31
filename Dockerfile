@@ -19,19 +19,6 @@ RUN make build || true
 
 
 
-# Build terraform
-FROM golang:1.13 AS terraform
-LABEL stage=intermediate
-
-ARG TERRAFORM_VERSION=v0.13.4
-ARG GO111MODULE=on
-
-RUN go get github.com/hashicorp/terraform@${TERRAFORM_VERSION}
-
-WORKDIR /go/src/github.com/hashicorp/terraform
-
-
-
 FROM alpine:3.12
 
 LABEL \
@@ -43,25 +30,32 @@ LABEL \
   org.opencontainers.image.vendor="https://mettendorf.it" \
   org.opencontainers.image.licenses="GNUv2"
 
-ARG AWS_CLI_VERSION=2.0.53
+ARG AWS_CLI_VERSION=1.18.169
+ARG TERRAFORM_VERSION=0.13.4
+
+ENV PATH=${PATH}:/opt/tfenv/bin
 
 RUN apk --no-cache add \
     bash \
+    curl \
     ca-certificates \
     openssl \
-    py-pip \
+    python3 \
+    py3-pip \
     wget \
     openssh \
     libc6-compat \
+    git \
     && apk add --no-cache -t deps wget \
     # INSTALL AWS CLI
     && pip install awscli==${AWS_CLI_VERSION} \
+    && git clone https://github.com/tfutils/tfenv.git /opt/tfenv \
+    # Terraform
+    && tfenv install ${TERRAFORM_VERSION} \
+    && tfenv use ${TERRAFORM_VERSION} \
     # CLEAN UP
     && apk del --purge deps \
     && rm -rf /tmp/*
 
 # Copy aws iam authenticator
 COPY --from=aws-iam-authenticator /go/src/sigs.k8s.io/aws-iam-authenticator/dist/authenticator_linux_amd64/aws-iam-authenticator /usr/local/bin
-
-# Copy terraform
-COPY --from=terraform /go/bin/terraform /usr/local/bin/terraform
