@@ -1,4 +1,4 @@
-# Hashicorp Terraform image with AWS iam authenticator built-in
+# Hashicorp Terraform image in various flavors
 
 > A simple ```alpine``` based container for building Terraform based infrastructure
 
@@ -19,6 +19,12 @@ In order to run this container you'll need docker installed.
 * [Windows](https://docs.docker.com/windows/started)
 * [OS X](https://docs.docker.com/mac/started/)
 * [Linux](https://docs.docker.com/linux/started/)
+
+## Flavors
+There are different variants of this image. Each of them pairing Terraform with
+different cloud-provider specific authenticators and/or tools:
+- Gcloud (every tag with the suffix `-gcloud`)
+- AWS (every tag with the suffix `-aws`)
 
 ### Usage
 
