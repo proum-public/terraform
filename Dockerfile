@@ -54,6 +54,7 @@ RUN apk --no-cache add \
     openssh \
     libc6-compat \
     git \
+    gnupg \
     && apk add --no-cache -t deps wget \
     # Terraform
     && git clone https://github.com/tfutils/tfenv.git /opt/tfenv \
