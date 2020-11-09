@@ -60,7 +60,7 @@ RUN apk --no-cache add \
     && tfenv install ${TERRAFORM_VERSION} \
     && tfenv use ${TERRAFORM_VERSION} \
     # Terraform plugins
-    && mkdir -p /usr/local/share/terraform/plugins \
+    && mkdir -p /usr/local/share/terraform/plugins/registry.terraform.io/dmacvicar/libvirt/0.6.2/linux_amd64 \
     # QEMU
     && apk --no-cache add \
     qemu-system-x86_64 \
@@ -70,6 +70,6 @@ RUN apk --no-cache add \
     && apk del --purge deps \
     && rm -rf /tmp/*
 
-COPY --from=terraform-libvirt-builder /tmp/terraform-provider-libvirt /usr/local/share/terraform/plugins
+COPY --from=terraform-libvirt-builder /tmp/terraform-provider-libvirt /usr/local/share/terraform/plugins/registry.terraform.io/dmacvicar/libvirt/0.6.2/linux_amd64
 
 CMD ["terraform"]
