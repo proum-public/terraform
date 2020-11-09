@@ -62,6 +62,11 @@ RUN apk --no-cache add \
     # Terraform plugins
     && mkdir -p /opt/terraform/plugins \
     && chmod -R 777 /opt/terraform/plugins \
+    # QEMU
+    && apk --no-cache add \
+    qemu-system-x86_64 \
+    qemu-img \
+    libvirt \
     # CLEAN UP
     && apk del --purge deps \
     && rm -rf /tmp/*
