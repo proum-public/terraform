@@ -1,3 +1,33 @@
+########################################################
+# TERRAFORM LIBVIRT PLUGIN BUILDER
+########################################################
+FROM golang:1.13-alpine3.12 as terraform-libvirt-builder
+
+ARG GOPATH=/build
+ARG GOBIN=/usr/local/go/bin
+ARG GO111MODULE=on
+
+RUN mkdir -p /build/src
+
+RUN apk --no-cache add \
+    git \
+    openssh \
+    make \
+    libvirt-dev \
+    gcc \
+    libc-dev
+
+RUN cd ${GOPATH}/src \
+    && git clone https://github.com/dmacvicar/terraform-provider-libvirt.git \
+    && cd $GOPATH/src/terraform-provider-libvirt \
+    && go list -m all \
+	&& make \
+	&& chmod a+x terraform-provider-libvirt \
+	&& cp terraform-provider-libvirt /tmp
+
+########################################################
+# MAIN IMAGE
+########################################################
 FROM alpine:3.12
 
 LABEL \
@@ -9,10 +39,9 @@ LABEL \
   org.opencontainers.image.vendor="https://mettendorf.it" \
   org.opencontainers.image.licenses="GNUv2"
 
-ARG CLOUD_SDK_VERSION=316.0.0
 ARG TERRAFORM_VERSION=0.13.4
 
-ENV PATH=${PATH}:/opt/tfenv/bin:/opt/google-cloud-sdk/bin
+ENV PATH=${PATH}:/opt/tfenv/bin
 
 RUN apk --no-cache add \
     bash \
@@ -30,13 +59,16 @@ RUN apk --no-cache add \
     && git clone https://github.com/tfutils/tfenv.git /opt/tfenv \
     && tfenv install ${TERRAFORM_VERSION} \
     && tfenv use ${TERRAFORM_VERSION} \
-    # GCloud CLI
-    && wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
-    && tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz -C /opt \
-    && rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
-    && ln -s /lib /lib64 \
-    && gcloud config set core/disable_usage_reporting true \
-    && gcloud --version \
+    # Terraform plugins
+    && mkdir -p /opt/terraform/plugins \
+    && chmod -R 777 /opt/terraform/plugins \
     # CLEAN UP
     && apk del --purge deps \
     && rm -rf /tmp/*
+
+COPY --from=terraform-libvirt-builder /tmp/terraform-provider-libvirt /opt/terraform/plugins
+
+# Entrypoint
+COPY files/ /
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
