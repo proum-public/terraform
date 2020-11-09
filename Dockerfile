@@ -60,8 +60,7 @@ RUN apk --no-cache add \
     && tfenv install ${TERRAFORM_VERSION} \
     && tfenv use ${TERRAFORM_VERSION} \
     # Terraform plugins
-    && mkdir -p /opt/terraform/plugins \
-    && chmod -R 777 /opt/terraform/plugins \
+    && mkdir -p /usr/local/share/terraform/plugins \
     # QEMU
     && apk --no-cache add \
     qemu-system-x86_64 \
@@ -71,9 +70,6 @@ RUN apk --no-cache add \
     && apk del --purge deps \
     && rm -rf /tmp/*
 
-COPY --from=terraform-libvirt-builder /tmp/terraform-provider-libvirt /opt/terraform/plugins
+COPY --from=terraform-libvirt-builder /tmp/terraform-provider-libvirt /usr/local/share/terraform/plugins
 
-# Entrypoint
-COPY files/ /
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["terraform"]
