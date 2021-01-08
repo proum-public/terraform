@@ -9,7 +9,7 @@ LABEL \
   org.opencontainers.image.vendor="https://mettendorf.it" \
   org.opencontainers.image.licenses="GNUv2"
 
-ARG TERRAFORM_VERSION=0.13.4
+ARG TERRAFORM_VERSION=0.14.2
 
 ENV PATH=${PATH}:/opt/tfenv/bin
 
